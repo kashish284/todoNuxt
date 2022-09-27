@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Buy cool new product</title>
+        <link rel="stylesheet" href="style.css">
+       
+        <script src="https://test-hpf.novattipayments.com/js/v1.0/hosted-fields.min.js"></script>
+      </head>
+      <body >
+        <section>
+          
+          
+            <div id="cardHolder" class="form-control" data-hpf="cardHolder">
+                <span>card holder:</span>
+                <input type="text" id="hpf-card-holder" autocomplete="off" maxlength="26" data-isvalid="false" placeholder="Cardholder Name">
+              </div>
+               <div id="cardNumber" class="form-control" data-hpf="cardNumber">
+                <span>card Number:</span>
+                <input type="tele" placeholder="number" id="hpf-card-number" name="cardNumber"  value="4242424242424242">
+              </div>
+               <div id="cardExpiry" class="form-control" data-hpf="12">
+                <span>card Expiry Month:</span>
+                <input type="number" id="hpf-card-expiry" placeholder="month">
+              </div> 
+               <div id="cardExpiry" class="form-control" data-hpf="cardExpiry">
+                <span>card Expiry Year:</span>
+                <input type="number" id="hpf-card-expiry" placeholder="year">
+              </div>
+              <div id="cvv" class="form-control" data-hpf="cvv">
+                <span>card CVV:</span>
+                <input id="hpf-cvv" type="tel" placeholder="CVV">
+              </div>
+            <button type="button" class="btn btn-primary" id="paymentButton" onClick="call()">
+              Confirm Payment
+              <span class="spinner-border spinner-border-sm" style="display: none" role="status" aria-hidden="true" id="spinner"></span>
+            </button>
+
+            <!-- <div class="novpoptitle">Card information</div>
+            <div class="Chosen_HLDd" id="Chosen_HLD" data-hpf="cardHolder">Name on the card*</div>
+            <div id="Chosen_NUM" class="Chosen_NUMm"  data-hpf="cardNumber">Card number*</div>
+            <div class="datecvv">
+            <div id="Chosen_EXP" class="Chosen_EXPp" data-hpf="cardExpiry">Expiry date* </div>
+            <div id="Chosen_CVV" class="Chosen_CVVv"  data-hpf="cvv">CVV*</div>
+          </div><button type="button" class="hpfmodal-submit-button" id="paymentButton">Pay</button>
+          <button type="button" class="novatti-popup-close">Close</button>
+         -->
+         
+        </section>
+      
+      <script>
+        const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbnRpdHlfdHlwZSI6Ik1lcmNoYW50Iiwic2NvcGUiOlsiaHViX3Byb2Nlc3NpbmciXSwiZXhwIjoxNjYzNzI5MjcwLCJlbnRpdHlfaWQiOiI0OTUxZWJjMy04NDE3LTQwOTctODk4MC0zMDdlZDM0ZjgxNTkiLCJhdXRob3JpdGllcyI6WyJST0xFX01FUkNIQU5UIl0sImp0aSI6ImZkOWFjNGNiLWUyMjAtNDg5Yi1iMDRlLTJhMWFkYWI3NmYxMiIsImNsaWVudF9pZCI6IjViNzFmNDBlLThhMTUtNDE4MC1hNzlhLTI3OWE4NDE1NzNlZCJ9.PEZiCC9vQ_HnUACIHSUwf3XAP8D4r2TASOmm6ycgTIg";
+        var hpfOptions = {
+          merchantID: "KP0047TT8R5BN64",
+          token: `${accessToken}`,
+        };
+        window.onload = function exampleFunction() {
+            console.log("loaded");
+            HPF.init(hpfOptions);
+        }
+        
+        // 
+        function call(){
+             HPF.generateToken(callbackFunction, "a32a5d16-e7ed-11ec-8fea-0242ac120002");
+            // const data = {"merchantTxnID":"a32a5d16-e7ed-11ec-8fea-0242ac120091","merchantID":"KP0047TT8R5BN64",
+            //                 "cardNumber":"4242424242424242"};
+            // fetch('https://test-hpf.novattipayments.com/api/v1.0/Transaction', {
+            //         method: 'POST', 
+            //         headers: {
+            //             'Content-Type': 'application/json',
+            //             'Authorization':`Bearer ${accessToken}`
+            //         },
+            //         body: JSON.stringify(data),
+            //         })
+            //         .then((response) => response.json())
+            //         .then((data) => {
+            //             console.log('Success:', data);
+            //             this.performPayment(data)
+            //         })
+            //         .catch((error) => {
+            //             console.error('Error:', error);
+            //         });
+                          };
+        function callbackFunction(data) {
+            
+          console.log(data);
+          let respCode = data.ResponseCode;
+          console.log(respCode);
+          if (respCode === "1000") {
+            // performPayment() is an example function that initiates sending of the nonce to the backend server to process and complete the payment via API
+            performPayment(data.Token);
+          } else {
+            changeLoadingState(false);
+          }
+        }
+        function performPayment(data){
+            fetch(' https://test-api.novattipayments.com', {
+                    method: 'POST', 
+                    
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization':`Bearer ${accessToken}`
+                    },
+                   
+                    body : JSON.stringify( 
+                        
+                      
+                      {
+
+                            "Header": {
+
+                            "MerchantID": "KP0047TT8R5BN64",
+
+                            "TransactionType": "OneStepPayment",
+
+                            "Version": "2",
+
+                            "UserID": ""
+
+                            },
+                            "Transaction": {
+                            "MerchantTxnID": "a32a5d16-e7ed-11ec-8fea-0242ac120091",
+                            "Currency": "AUD",
+                            "Amount": "20000",
+                            "Method": "CC",
+                            "ChannelType": "07"
+                            },
+                            "SecureTokenHolder": {
+                            "SecureToken":data.Token
+                            },
+                            "Customer": {
+                            "EmailAddress": "accept@email.com",
+                            "IPAddress": "203.38.74.134",
+                            "DateofBirth": "01011970",
+                            "TelNo": "5212345678901"
+                            },
+                            "BillingAddress": {
+                            "CustomerName": "John Doe",
+                            "Street1": "111 Bourke street",
+                            "City": "Beverly Hills",
+                            "Zip": "3000",
+                            "State": "VIC",
+                            "Country": "NZ"
+                            },
+                            "ShippingAddress": {
+                            "NoDisplay": "true",
+                            "CustomerName": "John Doe",
+                            "Street1": "111 Bourke street",
+                            "City": "Beverly Hills",
+                            "Zip": "3000",
+                            "State": "VIC",
+                            "Country": "NZ"
+                            }
+                      }
+                       
+)        
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        console.log('Success:', data);
+                        
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+                }                        
+        
+      </script>
+    
+    </body>
+</html>
